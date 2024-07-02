@@ -1,1 +1,8 @@
-Learning : - NodeJS - Auth - MongoDB/Mongoose - Redux
+MERN project still in progress
+
+Learning : 
+  - NodeJS
+  - Express
+  - MongoDB
+  - Redux
+  - Auth
