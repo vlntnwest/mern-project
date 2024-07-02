@@ -95,14 +95,14 @@ module.exports.unfollow = async (req, res) => {
   }
 
   try {
-    // add to the follower list
+    // remove from the follower list
     const unFollowedUser = await UserModel.findByIdAndUpdate(
       id,
       { $pull: { following: req.body.idToUnfollow } },
       { new: true, upsert: true }
     ).exec();
 
-    // add to following list
+    // remove from following list
     const unFollowerUser = await UserModel.findByIdAndUpdate(
       req.body.idToUnfollow,
       { $pull: { followers: id } },
