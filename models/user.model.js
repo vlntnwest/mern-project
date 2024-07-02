@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       validate: [isEmail],
+      unique: true,
       lowercase: true,
       trim: true,
     },
@@ -59,6 +60,18 @@ userSchema.pre("save", async function (next) {
     next(error);
   }
 });
+
+userSchema.statics.login = async function (email, password) {
+  const user = await this.findOne({ email });
+  if (user) {
+    const auth = await bcrypt.compare(password, user.password);
+    if (auth) {
+      return user;
+    }
+    throw Error("incorrect password");
+  }
+  throw Error("incorrect email");
+};
 
 const UserModel = mongoose.model("user", userSchema);
 

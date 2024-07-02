@@ -1,8 +1,3 @@
-MERN project still in progress
+First MERN project still in progress
 
-Learning : 
-  - NodeJS
-  - Express
-  - MongoDB
-  - Redux
-  - Auth
+Stack : MongoDB, Express, React, Nodejs. Featuring JWT, Mongoose, Multer, Bcrypt, Redux, Sass
