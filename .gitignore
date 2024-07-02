@@ -1,0 +1,10 @@
+# Ignorer le fichier .env dans le répertoire config
+config/.env
+
+# Ignorer le répertoire node_modules à la racine
+/node_modules/
+
+# Ignorer les fichiers .DS_Store générés par macOS
+.DS_Storeconfig/.env
+node_modules/
+.DS_Store
