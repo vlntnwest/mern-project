@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// play function before save into display: 'block',
+// play function before save into db',
 userSchema.pre("save", async function (next) {
   try {
     const salt = await bcrypt.genSalt();
