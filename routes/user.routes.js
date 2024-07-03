@@ -3,18 +3,7 @@ const authController = require("../controllers/auth.controller");
 const userController = require("../controllers/user.controller");
 const uploadController = require("../controllers/upload.controller");
 const multer = require("multer");
-
-// Configure multer pour utiliser le stockage sur disque
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, `${__dirname}/../client/public/upload/profil/`); // Spécifiez le répertoire de destination
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname); // Générer un nom de fichier unique
-  },
-});
-
-const upload = multer({ storage: storage });
+const path = require("path");
 
 const router = express.Router();
 
@@ -31,7 +20,19 @@ router.delete("/:id", userController.deleteUser);
 router.patch("/follow/:id", userController.follow);
 router.patch("/unfollow/:id", userController.unfollow);
 
-// upload
+const uploadDir = path.join(__dirname, "../client/public/upload/profil/");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + ".jpg");
+  },
+});
+
+const upload = multer({ storage: storage });
+
 router.post("/upload", upload.single("file"), uploadController.uploadProfil);
 
 module.exports = router;
