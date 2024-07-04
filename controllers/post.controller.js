@@ -1,7 +1,44 @@
-const postModel = require("../models/post.model");
+const { equals } = require("validator");
 const PostModel = require("../models/post.model");
 const UserModel = require("../models/user.model");
 const ObjectID = require("mongoose").Types.ObjectId;
+const path = require("path");
+const multer = require("multer");
+const { uploadErrors } = require("../utils/error.utils");
+
+const uploadDir = path.join(__dirname, "../client/public/upload/posts/");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + ".jpg");
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10000000 },
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  },
+}).single("file");
+
+// Check file type
+function checkFileType(file, cb) {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    const error = new Error("Error: Images only! (jpeg, jpg, png, gif)");
+    uploadErrors(error);
+    cb(error);
+  }
+}
 
 module.exports.readPost = async (req, res) => {
   try {
@@ -14,20 +51,33 @@ module.exports.readPost = async (req, res) => {
 };
 
 module.exports.createPost = async (req, res) => {
-  const newPost = new postModel({
-    posterId: req.body.posterId,
-    message: req.body.message,
-    video: req.body.video,
-    likers: [],
-    comments: [],
-  });
+  upload(req, res, async (err) => {
+    if (err) {
+      if (err.code === "LIMIT_UNEXPECTED_FILE") {
+        return res.status(400).json({ error: "Too many files to upload." });
+      }
+      console.error("Upload error:", err);
+      const errors = uploadErrors(err);
+      return res.status(500).json({ errors });
+    }
 
-  try {
-    const post = await newPost.save();
-    return res.status(201).json(post);
-  } catch (err) {
-    return res.status(400).send(err);
-  }
+    try {
+      const newPost = new PostModel({
+        posterId: req.body.posterId,
+        message: req.body.message,
+        picture: req.file ? `./upload/posts/${req.file.filename}` : "",
+        video: req.body.video,
+        likers: [],
+        comments: [],
+      });
+
+      const post = await newPost.save();
+      return res.status(201).json(post);
+    } catch (err) {
+      console.error("Error saving post:", err);
+      return res.status(400).send(err);
+    }
+  });
 };
 
 module.exports.updatePost = async (req, res) => {

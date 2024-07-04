@@ -42,7 +42,7 @@ module.exports.uploadProfil = async (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
       console.error(err);
-      const errors = uploadErrors(err); // Translate and handle errors
+      const errors = uploadErrors(err);
       return res.status(500).json({ errors });
     }
     if (!req.file) {
