@@ -29,9 +29,11 @@ module.exports.signInErrors = (err) => {
 module.exports.uploadErrors = (err) => {
   let errors = { format: "", maxSize: "" };
 
-  if (err.message.includes("Invalid file"))
+  if (err.message.includes("Error: Images only! (jpeg, jpg, png, gif)"))
     errors.format = "Format incompatible";
 
-  if (err.message.includes("Max size"))
+  if (err.message.includes("File too large"))
     errors.maxSize = "Le fichier dépasse 500ko";
+
+  return errors;
 };
