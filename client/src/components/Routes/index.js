@@ -4,11 +4,13 @@ import Home from "../../pages/Home";
 import Profil from "../../pages/Profil";
 import Trending from "../../pages/Trending";
 import Navbar from "../Navbar";
+import Sidebar from "../Sidebar";
 
 const Index = () => {
   return (
     <BrowserRouter>
       <Navbar />
+      <Sidebar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/profil" element={<Profil />} />

@@ -20,6 +20,8 @@ const SignupForm = () => {
     );
     const termsError = document.querySelector(".terms.error");
 
+    const pseudoLowerCase = pseudo.toLowerCase();
+
     passwordConfirmError.innerHTML = "";
     termsError.innerHTML = "";
 
@@ -35,7 +37,7 @@ const SignupForm = () => {
         method: "post",
         url: `${process.env.REACT_APP_API_URL}api/user/register`,
         data: {
-          pseudo,
+          pseudo: pseudoLowerCase,
           email,
           password,
         },

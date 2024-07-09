@@ -11,18 +11,24 @@ const App = () => {
 
   useEffect(() => {
     const fetchToken = async () => {
-      axios({
-        method: "get",
-        url: `${process.env.REACT_APP_API_URL}jwtid`,
-        withCredentials: true,
-      })
-        .then((res) => setUid(res.data))
-        .catch((err) => console.log("No token"));
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}jwtid`, {
+          withCredentials: true,
+        });
+        setUid(res.data);
+      } catch (err) {
+        console.log("No token");
+      }
     };
-    fetchToken();
 
-    if (uid) dispatch(getUser(uid));
-  }, [uid]);
+    fetchToken();
+  }, []);
+
+  useEffect(() => {
+    if (uid) {
+      dispatch(getUser(uid));
+    }
+  }, [uid, dispatch]);
 
   return (
     <UidContext.Provider value={uid}>

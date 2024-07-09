@@ -23,7 +23,7 @@ const Navbar = () => {
             <li></li>
             <li className="welcome">
               <NavLink to="/profil" />
-              <h5>Bienvenu {userData.pseudo}</h5>
+              <h5>Welcome {userData.name ? userData.name : userData.pseudo}</h5>
             </li>
             <Logout />
           </ul>
