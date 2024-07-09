@@ -1,11 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Log from "../components/Log";
 import { UidContext } from "../components/AppContext";
 import { useSelector } from "react-redux";
+import EditProfil from "../components/Modal/EditProfil";
 
 const Profil = () => {
   const uid = useContext(UidContext);
   const userData = useSelector((state) => state.userReducer);
+  const [editModal, setEditModal] = useState(false);
 
   const savedTime = userData.createdAt;
   const formatedDate = new Date(savedTime).toLocaleString("fr-FR", {
@@ -13,8 +15,12 @@ const Profil = () => {
     year: "numeric",
   });
 
-  const followersNumber = userData.followers.length;
-  const followingNumber = userData.following.length;
+  const followersNumber = userData.followers ? userData.followers.length : 0;
+  const followingNumber = userData.following ? userData.following.length : 0;
+
+  const toggleModal = () => {
+    setEditModal(!editModal);
+  };
 
   return (
     <div className="profil-page">
@@ -25,10 +31,16 @@ const Profil = () => {
           </div>
           <h3>{userData.name ? userData.name : ""}</h3>
           <p>@{userData.pseudo}</p>
+          <p>{userData.bio ? userData.bio : null}</p>
           <p>Rejoins en {formatedDate}</p>
           <span>{followersNumber} Following</span>
           <span>{followingNumber} Followers</span>
-          <div className="btn edit">Edit profil</div>
+          <button className="btn edit" onClick={toggleModal}>
+            Edit profil
+          </button>
+          {editModal && (
+            <EditProfil toggleModal={toggleModal} userData={userData} />
+          )}
         </div>
       ) : (
         <div className="log-container">

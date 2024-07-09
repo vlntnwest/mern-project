@@ -31,9 +31,13 @@ module.exports.updateUser = async (req, res) => {
   }
 
   try {
+    const updateData = {};
+    if (req.body.name) updateData.name = req.body.name;
+    if (req.body.bio) updateData.bio = req.body.bio;
+
     const updatedUser = await UserModel.findOneAndUpdate(
       { _id: id },
-      { $set: { bio: req.body.bio } },
+      { $set: updateData },
       { new: true, upsert: true, setDefaultsOnInsert: true }
     ).exec();
 
