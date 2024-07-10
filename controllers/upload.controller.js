@@ -1,5 +1,4 @@
 const UserModel = require("../models/user.model");
-const fs = require("fs");
 const { uploadErrors } = require("../utils/error.utils");
 const path = require("path");
 const multer = require("multer");
@@ -11,7 +10,10 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + ".jpg");
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    console.log(uniqueSuffix);
+    const filename = `${uniqueSuffix}.jpg`;
+    cb(null, filename);
   },
 });
 
@@ -23,7 +25,6 @@ const upload = multer({
   },
 }).single("file");
 
-// Check file type
 function checkFileType(file, cb) {
   const filetypes = /jpeg|jpg|png|gif/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -33,8 +34,8 @@ function checkFileType(file, cb) {
     return cb(null, true);
   } else {
     const error = new Error("Error: Images only! (jpeg, jpg, png, gif)");
-    uploadErrors(error); // Utilize your error handling utility
-    cb(error); // Pass the error to Multer
+    uploadErrors(error);
+    cb(error);
   }
 }
 

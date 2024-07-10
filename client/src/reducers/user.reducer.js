@@ -1,4 +1,4 @@
-import { EDIT_USER, GET_USER } from "../actions/user.action";
+import { EDIT_USER, GET_USER, UPLOAD_PICTURE } from "../actions/user.action";
 
 const initialState = {};
 
@@ -10,6 +10,11 @@ export default function userReducer(state = initialState, action) {
       return {
         ...state,
         ...action.payload,
+      };
+    case UPLOAD_PICTURE:
+      return {
+        ...state,
+        picture: action.payload,
       };
     default:
       return state;

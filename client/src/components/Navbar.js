@@ -20,7 +20,6 @@ const Navbar = () => {
         </div>
         {uid ? (
           <ul>
-            <li></li>
             <li className="welcome">
               <NavLink to="/profil" />
               <h5>Welcome {userData.name ? userData.name : userData.pseudo}</h5>
@@ -29,7 +28,6 @@ const Navbar = () => {
           </ul>
         ) : (
           <ul>
-            <li></li>
             <li>
               <NavLink to="/profil">
                 <img src="./img/icons/login.svg" alt="login" />

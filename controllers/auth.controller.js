@@ -16,6 +16,7 @@ module.exports.signUp = async (req, res) => {
     const user = await UserModel.create({ pseudo, email, password });
     res.status(201).json({ user: user._id });
   } catch (err) {
+    console.error("Erreur lors de la création de l'utilisateur :", err);
     const errors = signUpErrors(err);
     res.status(200).send({ errors });
   }

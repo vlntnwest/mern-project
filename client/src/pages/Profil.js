@@ -27,7 +27,7 @@ const Profil = () => {
       {uid ? (
         <div className="profil">
           <div className="img-container">
-            <img src="" alt="" />
+            <img src={userData.picture} alt="Profil" />
           </div>
           <h3>{userData.name ? userData.name : ""}</h3>
           <p>@{userData.pseudo}</p>

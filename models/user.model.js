@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { isEmail } = require("validator");
+const { isEmail, trim } = require("validator");
 const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
@@ -10,11 +10,11 @@ const userSchema = new mongoose.Schema(
       minLength: 3,
       maxLength: 55,
       unique: true,
+      lowercase: true,
       trim: true,
     },
     name: {
       type: String,
-      require: true,
       minLength: 3,
       maxLength: 55,
       trim: true,
@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
       max: 1024,
+      trim: true,
     },
     followers: {
       type: [String],
