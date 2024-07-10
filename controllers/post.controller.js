@@ -50,6 +50,25 @@ module.exports.readPost = async (req, res) => {
   }
 };
 
+module.exports.readUserPost = async (req, res) => {
+  const posterId = req.params.posterId;
+  console.log(posterId);
+
+  if (!ObjectID.isValid(posterId))
+    return res.status(400).send("ID unknown : " + posterId);
+
+  try {
+    const post = await PostModel.find({ posterId });
+    if (!post) {
+      return res.status(404).send("No post found");
+    }
+    res.send(post);
+  } catch (err) {
+    console.error("Error while fetching user:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 module.exports.createPost = async (req, res) => {
   upload(req, res, async (err) => {
     if (err) {

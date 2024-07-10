@@ -3,11 +3,18 @@ import Log from "../components/Log";
 import { UidContext } from "../components/AppContext";
 import { useSelector } from "react-redux";
 import EditProfil from "../components/Modal/EditProfil";
+import ProfilPosts from "../components/posts/ProfilPosts";
+import { isEmpty } from "../components/Utils";
 
 const Profil = () => {
   const uid = useContext(UidContext);
   const userData = useSelector((state) => state.userReducer);
   const [editModal, setEditModal] = useState(false);
+  const posts = useSelector((state) => state.postReducer);
+
+  const sortedPosts = !isEmpty(posts)
+    ? [...posts].sort((a, b) => b.date - a.date)
+    : [];
 
   const savedTime = userData.createdAt;
   const formatedDate = new Date(savedTime).toLocaleString("fr-FR", {
@@ -41,6 +48,9 @@ const Profil = () => {
           {editModal && (
             <EditProfil toggleModal={toggleModal} userData={userData} />
           )}
+          {sortedPosts.map((post, index) => (
+            <ProfilPosts post={post} key={index} />
+          ))}
         </div>
       ) : (
         <div className="log-container">

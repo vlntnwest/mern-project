@@ -2,6 +2,7 @@ const router = require("express").Router();
 const postController = require("../controllers/post.controller");
 
 router.get("/", postController.readPost);
+router.get("/:posterId", postController.readUserPost);
 router.post("/", postController.createPost);
 router.post("/upload", postController.createPost);
 router.put("/:id", postController.updatePost);
