@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
-    pseudo: {
+    username: {
       type: String,
       require: true,
       minLength: 3,
@@ -79,6 +79,10 @@ userSchema.statics.login = async function (email, password) {
     throw Error("incorrect password");
   }
   throw Error("incorrect email");
+};
+
+userSchema.statics.getUserByUsername = function (username) {
+  return this.findOne({ username }).select("-password").exec();
 };
 
 const UserModel = mongoose.model("user", userSchema);

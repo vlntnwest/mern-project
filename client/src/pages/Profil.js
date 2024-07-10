@@ -3,7 +3,7 @@ import Log from "../components/Log";
 import { UidContext } from "../components/AppContext";
 import { useSelector } from "react-redux";
 import EditProfil from "../components/Modal/EditProfil";
-import ProfilPosts from "../components/posts/ProfilPosts";
+import Posts from "../components/posts/Posts";
 import { isEmpty } from "../components/Utils";
 
 const Profil = () => {
@@ -37,7 +37,7 @@ const Profil = () => {
             <img src={userData.picture} alt="Profil" />
           </div>
           <h3>{userData.name ? userData.name : ""}</h3>
-          <p>@{userData.pseudo}</p>
+          <p>@{userData.username}</p>
           <p>{userData.bio ? userData.bio : null}</p>
           <p>Rejoins en {formatedDate}</p>
           <span>{followersNumber} Following</span>
@@ -49,7 +49,7 @@ const Profil = () => {
             <EditProfil toggleModal={toggleModal} userData={userData} />
           )}
           {sortedPosts.map((post, index) => (
-            <ProfilPosts post={post} key={index} />
+            <Posts post={post} key={index} />
           ))}
         </div>
       ) : (

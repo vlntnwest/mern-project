@@ -39,3 +39,18 @@ export const uploadPicture = (data, uid) => {
       .catch((err) => console.log(err));
   };
 };
+
+export const fetchUserIfNeeded = (username) => (dispatch, getState) => {
+  const { userReducer } = getState();
+
+  if (!userReducer || userReducer.username !== username) {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}api/user/username/${username}`)
+      .then((res) => {
+        dispatch({ type: "SET_USER_DATA", payload: res.data });
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }
+};

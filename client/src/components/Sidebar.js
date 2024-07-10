@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const Sidebar = () => {
+const Sidebar = ({ username }) => {
   return (
     <nav>
       <ul>
@@ -16,8 +16,8 @@ const Sidebar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/profil">
-            <img src="./img/icons/user.svg" alt="profil" />
+          <NavLink to={username ? `/${username}` : "/connexion"}>
+            <img src="./img/icons/user.svg" alt="profile" />
           </NavLink>
         </li>
       </ul>

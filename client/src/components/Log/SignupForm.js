@@ -4,7 +4,7 @@ import SignInForm from "./SignInForm";
 
 const SignupForm = () => {
   const [formSubmit, setFormSubmit] = useState(false);
-  const [pseudo, setPseudo] = useState("");
+  const [username, setusername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [controlPassword, setControlPassword] = useState("");
@@ -12,7 +12,7 @@ const SignupForm = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     const terms = document.getElementById("terms");
-    const pseudoError = document.querySelector(".pseudo.error");
+    const usernameError = document.querySelector(".username.error");
     const emailError = document.querySelector(".email.error");
     const passwordError = document.querySelector(".password.error");
     const passwordConfirmError = document.querySelector(
@@ -35,7 +35,7 @@ const SignupForm = () => {
         method: "post",
         url: `${process.env.REACT_APP_API_URL}api/user/register`,
         data: {
-          pseudo,
+          username,
           email,
           password,
         },
@@ -43,7 +43,7 @@ const SignupForm = () => {
         .then((res) => {
           console.log(res);
           if (res.data.errors) {
-            pseudoError.innerHTML = res.data.errors.pseudo;
+            usernameError.innerHTML = res.data.errors.username;
             emailError.innerHTML = res.data.errors.email;
             passwordError.innerHTML = res.data.errors.password;
           } else {
@@ -68,16 +68,16 @@ const SignupForm = () => {
         </>
       ) : (
         <form action="" onSubmit={handleRegister} id="sign-up-form">
-          <label htmlFor="pseudo">Pseudo</label>
+          <label htmlFor="username">username</label>
           <br />
           <input
             type="text"
-            name="pseudo"
-            id="pseudo"
-            onChange={(e) => setPseudo(e.target.value)}
-            value={pseudo}
+            name="username"
+            id="username"
+            onChange={(e) => setusername(e.target.value)}
+            value={username}
           />
-          <div className="pseudo error"></div>
+          <div className="username error"></div>
           <br />
           <label htmlFor="email">Email</label>
           <br />

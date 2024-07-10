@@ -13,6 +13,7 @@ router.get("/logout", authController.logout);
 // user db
 router.get("/", userController.getAllUsers);
 router.get("/:id", userController.userInfo);
+router.get("/username/:username", userController.userProfil);
 router.put("/:id", userController.updateUser);
 router.delete("/:id", userController.deleteUser);
 router.patch("/follow/:id", userController.follow);

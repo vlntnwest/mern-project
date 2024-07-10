@@ -203,7 +203,7 @@ module.exports.commentPost = async (req, res) => {
         $push: {
           comments: {
             commenterId: req.body.commenterId,
-            commenterPseudo: req.body.commenterPseudo,
+            commenterUsername: req.body.commenterUsername,
             text: req.body.text,
             timestamp: new Date().getTime(),
           },

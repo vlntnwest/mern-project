@@ -23,6 +23,21 @@ module.exports.userInfo = async (req, res) => {
   }
 };
 
+module.exports.userProfil = async (req, res) => {
+  const username = req.params.username;
+
+  try {
+    const user = await UserModel.findOne({ username }).select("-password");
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    res.send(user);
+  } catch (err) {
+    console.error("Error while fetching user profile:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 module.exports.updateUser = async (req, res) => {
   const id = req.params.id;
 

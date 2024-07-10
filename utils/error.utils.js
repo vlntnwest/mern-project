@@ -1,8 +1,8 @@
 module.exports.signUpErrors = (err) => {
-  let errors = { pseudo: "", email: "", password: "" };
+  let errors = { username: "", email: "", password: "" };
 
-  if (err.message && err.message.includes("pseudo")) {
-    errors.pseudo = "Pseudo incorrect ou déjà pris";
+  if (err.message && err.message.includes("username")) {
+    errors.username = "username incorrect ou déjà pris";
   }
 
   if (err.message && err.message.includes("email")) {
@@ -14,8 +14,8 @@ module.exports.signUpErrors = (err) => {
   }
 
   if (err.code === 11000) {
-    if (err.keyPattern && err.keyPattern.pseudo) {
-      errors.pseudo = "Ce pseudo est déjà utilisé";
+    if (err.keyPattern && err.keyPattern.username) {
+      errors.username = "Ce username est déjà utilisé";
     }
     if (err.keyPattern && err.keyPattern.email) {
       errors.email = "Cet email est déjà utilisé";

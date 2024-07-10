@@ -21,15 +21,17 @@ const Navbar = () => {
         {uid ? (
           <ul>
             <li className="welcome">
-              <NavLink to="/profil" />
-              <h5>Welcome {userData.name ? userData.name : userData.pseudo}</h5>
+              <NavLink to="/connexion" />
+              <h5>
+                Welcome {userData.name ? userData.name : userData.username}
+              </h5>
             </li>
             <Logout />
           </ul>
         ) : (
           <ul>
             <li>
-              <NavLink to="/profil">
+              <NavLink to="/connexion">
                 <img src="./img/icons/login.svg" alt="login" />
               </NavLink>
             </li>
