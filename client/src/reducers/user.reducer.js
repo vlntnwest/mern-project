@@ -1,4 +1,10 @@
-import { EDIT_USER, GET_USER, UPLOAD_PICTURE } from "../actions/user.action";
+import {
+  EDIT_USER,
+  GET_USER,
+  UPLOAD_PICTURE,
+  FOLLOW_USER,
+  UNFOLLOW_USER,
+} from "../actions/user.action";
 
 const initialState = {};
 
@@ -15,6 +21,18 @@ export default function userReducer(state = initialState, action) {
       return {
         ...state,
         picture: action.payload,
+      };
+    case FOLLOW_USER:
+      return {
+        ...state,
+        following: [...state.following, action.payload.idToFollow],
+      };
+    case UNFOLLOW_USER:
+      return {
+        ...state,
+        following: state.following.filter(
+          (id) => id !== action.payload.idToUnfollow
+        ),
       };
     default:
       return state;

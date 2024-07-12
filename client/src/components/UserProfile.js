@@ -1,43 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import EditProfil from "../components/Modal/EditProfil";
 import Posts from "../components/posts/Posts";
 import { isEmpty } from "../components/Utils";
 import { getUserPosts } from "../actions/post.action";
+import { getProfile } from "../actions/user.action";
+import FollowButton from "./Button/FollowButton";
 
 const UserProfile = () => {
   const { username } = useParams();
   const dispatch = useDispatch();
 
-  // Utilisation de Redux pour les utilisateurs connectés
   const userData = useSelector((state) => state.userReducer);
+  const profileData = useSelector((state) => state.profileReducer);
   const posts = useSelector((state) => state.postReducer);
 
-  // Utilisation de useState pour les utilisateurs non connectés
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fonction pour charger les données d'utilisateur et de post depuis l'API via Axios
     const fetchData = async () => {
       setLoading(true);
       try {
-        let userResponse;
-        if (username === userData.username) {
-          // Utilisateur connecté, pas besoin de charger l'utilisateur via Axios
-          userResponse = userData;
-        } else {
-          // Utilisateur non connecté, charger depuis Axios
-          userResponse = await axios.get(
-            `${process.env.REACT_APP_API_URL}api/user/username/${username}`
-          );
-          setUser(userResponse.data);
+        if (username !== userData.username) {
+          await dispatch(getProfile(username));
         }
-
-        dispatch(getUserPosts(userResponse.data._id));
+        dispatch(getUserPosts(profileData._id || userData._id));
       } catch (error) {
         setError(
           error.response
@@ -49,82 +38,56 @@ const UserProfile = () => {
       }
     };
 
-    fetchData(); // Appeler fetchData pour charger les données au montage ou lorsque username change
-  }, [username, userData.username, dispatch]);
+    fetchData();
+  }, [username, userData.username, dispatch, profileData._id, userData._id]);
 
-  // Tri des posts
   const sortedPosts = !isEmpty(posts)
     ? [...posts].sort((a, b) => new Date(b.date) - new Date(a.date))
     : [];
 
-  // Fonction pour basculer le modal d'édition de profil
   const [editModal, setEditModal] = useState(false);
   const toggleModal = () => {
     setEditModal(!editModal);
   };
 
-  // Fonction pour afficher les informations du profil
   const renderUserProfile = () => {
-    // Utilisateur connecté, afficher depuis Redux
-    if (username === userData.username) {
-      return (
-        <div className="profil">
-          <div className="img-container">
-            <img src={userData.picture} alt="Profil" />
-          </div>
-          <h3>{userData.name ? userData.name : ""}</h3>
-          <p>@{userData.username}</p>
-          <p>{userData.bio ? userData.bio : null}</p>
-          <p>
-            Rejoins en{" "}
-            {new Date(userData.createdAt).toLocaleDateString("fr-FR")}
-          </p>
-          <span>{userData.following.length} Following</span>
-          <span>{userData.followers.length} Followers</span>
-          <button className="btn edit" onClick={toggleModal}>
-            Edit profil
-          </button>
-          {editModal && (
-            <EditProfil toggleModal={toggleModal} userData={userData} />
-          )}
-          {sortedPosts.map((post, index) => (
-            <Posts post={post} user={user} key={index} />
-          ))}
-        </div>
-      );
-    }
+    const user = username === userData.username ? userData : profileData;
 
-    // Utilisateur non connecté, afficher depuis Axios
     if (loading) {
-      return <p>Loading...</p>; // Afficher un indicateur de chargement si les données sont en cours de chargement
+      return <p>Loading...</p>;
     }
 
     if (error) {
-      return <p>Error: {error}</p>; // Afficher un message d'erreur si une erreur se produit lors du chargement des données
+      return <p>Error: {error}</p>;
     }
 
-    if (user) {
-      return (
-        <div className="profil">
-          <div className="img-container">
-            <img src={user.picture} alt="Profil" />
-          </div>
-          <h3>{user.name ? user.name : ""}</h3>
-          <p>@{user.username}</p>
-          <p>{user.bio ? user.bio : null}</p>
-          <p>
-            Rejoins en {new Date(user.createdAt).toLocaleDateString("fr-FR")}
-          </p>
-          <span>{user.following.length} Following</span>
-          <span>{user.followers.length} Followers</span>
-          {sortedPosts.map((post, index) => (
-            <Posts post={post} key={index} />
-          ))}
+    return user ? (
+      <div className="profil">
+        <div className="img-container">
+          <img src={user.picture} alt="Profil" />
         </div>
-      );
-    }
-
-    return null; // Retourne null si aucune donnée n'est disponible pour l'utilisateur non connecté
+        <h3>{user.name ? user.name : ""}</h3>
+        <p>@{user.username}</p>
+        <p>{user.bio ? user.bio : null}</p>
+        <p>Rejoins en {new Date(user.createdAt).toLocaleDateString("fr-FR")}</p>
+        <span>{user.following?.length || 0} Following</span>
+        <span>{user.followers?.length || 0} Followers</span>
+        {username === userData.username && (
+          <button className="btn edit" onClick={toggleModal}>
+            Edit profil
+          </button>
+        )}
+        {editModal && (
+          <EditProfil toggleModal={toggleModal} userData={userData} />
+        )}
+        {username !== userData.username && (
+          <FollowButton targetUserId={user._id} />
+        )}
+        {sortedPosts.map((post, index) => (
+          <Posts post={post} key={index} />
+        ))}
+      </div>
+    ) : null;
   };
 
   return <div className="profil-page">{renderUserProfile()}</div>;
